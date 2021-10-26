@@ -4,7 +4,7 @@ package ejercicio;
 import java.util.Scanner;
 
 
-public class parteB {
+public class ParteB {
 
    
     public static void main(String[] args) {
@@ -27,16 +27,17 @@ public class parteB {
        0.45kWh * 0 h * 0.18€/kWh = 0€ (hora valle)
        El precio final de la colada es 0.31€.*/
        
-        /*Inicializo Scanner y declaro las variables tipo double consumo, horas y preciokWh para su
+        /*Inicializo Scanner y declaro la variable tipo double consumopara su
         posterior uso.*/
         Scanner entrada = new Scanner(System.in);
         double consumo;
-        double horas;
-        double preciokWh;
         //Agrego variables para los distintos tipos de horarios.
-        double punta;
-        double llana;
-        double valle;
+        double horaPunta;
+        double horaLlana;
+        double horaValle;
+        double precioPunta;
+        double precioLlana;
+        double precioValle;
         //Creamos menú para que interaccione el usuario.
         System.out.println("Menú de opciones");
         System.out.println("-----------------");
@@ -58,23 +59,35 @@ public class parteB {
                         System.out.println("Introduzca la cantidad de consumo en W/h del aparato (entre 1 W/h y 4500 W/h: ");
                         consumo = entrada.nextDouble();
                     } while (consumo < 1 || consumo > 4500);
-                    //Solicitamos al usuario la cantidad de horas que ha estado funcionando el aparato.
+                    //Solicitamos al usuario las horas según el tramo horario, y el precio de cada tramo.
                     do {
-                        System.out.println("Introduzca cuántas horas ha estado encendido el aparato (entre 0 y 24): ");
-                        horas = entrada.nextDouble();
-                    } while (horas < 0 || horas > 24); //El 24 es la cantidad de horas del día, tal y como pone el enunciado.
-                    //Solicitamos al usuario el precio del kWh que tiene contratado, entre 0.1 y 0.45.
+                        System.out.println("Introduzca cuántas horas ha estado encendido el aparato en horas valle (entre las 0h y 8h): ");
+                        horaValle = entrada.nextDouble();
+                        System.out.println("Precio kWh en horas valle (0,1 a 0,15: ");
+                        precioValle = entrada.nextDouble();
+                    } while ((horaValle <= 0 || horaValle > 24) && (precioValle <0.1 || precioValle > 0.15));
                     do {
-                        System.out.println("Introduzca el precio del kWh contratado (entre 0,1 y 0,45): ");
-                        preciokWh = entrada.nextDouble();
-                    } while (preciokWh < 0.1 || preciokWh > 0.45);
-
+                        System.out.println("Introduzca cuántas horas ha estado encendido el aparato en horas llana (entre las 08h y 10h, 14h y 18h, y 22h a 00h): ");
+                        horaLlana = entrada.nextDouble();
+                        System.out.println("Precio kWh en horas llana (0,15 a 0,30: ");
+                        precioLlana = entrada.nextDouble();
+                    } while ((horaLlana <= 0 || horaLlana > 24) && (precioLlana < 0.15 || precioLlana > 0.30));
+                    do {
+                        System.out.println("Introduzca cuántas horas ha estado encendido el aparato en horas punta (entre las 10h y 14h, y 18h a 22h): ");
+                        horaPunta = entrada.nextDouble();
+                        System.out.println("Precio kWh en horas punta (0,30 a 0,45: ");
+                        precioPunta = entrada.nextDouble();
+                    } while ((horaPunta <= 0 || horaPunta > 24) && (precioPunta < 0.30 || precioPunta > 0.45));
+                    
                     /*Realizamos la operación para calcular el precio final del consumo del aparato,
-                    guardándolo en una nueva variable. Inicializo una nueva variable para convertir
+                    guardándolo en nuevas variables según el tramo horario. Inicializo una nueva variable para convertir
                     vatios/hora a kilovatios/hora*/
                     final double CONVERSION = consumo / 1000;
-                    double precioFinal = (CONVERSION * horas * preciokWh);
-                    System.out.printf("%nEl gasto final del aparato es de: %.2f", precioFinal);
+                    double precioFinalLlana = (CONVERSION * horaValle * precioValle);
+                    double precioFinalValle = (CONVERSION * horaLlana * precioLlana);
+                    double precioFinalPunta = (CONVERSION * horaPunta * precioPunta);
+                    double precioFinalFinalisimo = precioFinalLlana + precioFinalValle + precioFinalPunta;
+                    System.out.printf("%nEl gasto final del aparato es de: %.2f", precioFinalFinalisimo);
                     System.out.print("€");
                     break;
                 case 2:
